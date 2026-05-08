@@ -8,7 +8,7 @@
 
 - **Draw a selection box** on any webpage by clicking and dragging.
 - **Mark the midpoint** with either a dot or a crosshair.
-- **Customize the marker** — choose from seven preset colors, adjust opacity from 10 % to 100 %, and set a size from 2 px to 24 px.
+- **Customize the marker** — choose from seven preset colors, adjust opacity from 10% to 100%, and set a size from 2px to 24px.
 - **Live preview** of the marker style inside the popup before you start.
 - **Update styling live** — change settings while a marker is on screen and it updates immediately.
 - **Save and restore** — confirm a selection and reuse it on any page with a single click.
@@ -60,8 +60,8 @@ Build an `.xpi` (see [Build](#build)) and submit it to [addons.mozilla.org](http
 3. Choose your marker settings:
    - **Marker style** — *Dot only* or *Crosshair only*
    - **Color** — Red, Yellow, Blue, Green, Purple, Black, or White
-   - **Opacity** — drag the slider (10 % – 100 %)
-   - **Marker size** — drag the slider (2 px – 24 px)
+   - **Opacity** — drag the slider (10% – 100%)
+   - **Marker size** — drag the slider (2px – 24px)
 4. Click **Start Selection**. The popup closes and a translucent overlay appears on the page.
 5. Click and drag to draw a selection box over the area you want to measure.
 6. Release the mouse. A **Confirm / Cancel** toolbar appears near the selection.
@@ -80,7 +80,7 @@ Build an `.xpi` (see [Build](#build)) and submit it to [addons.mozilla.org](http
 | Marker style | Dot only, Crosshair only | Dot only |
 | Color | Red `#d62828`, Yellow `#f4c430`, Blue `#2563eb`, Green `#2f9e44`, Purple `#7c3aed`, Black `#111111`, White `#ffffff` | Red |
 | Opacity | 0.10 – 1.00 (step 0.05) | 0.90 |
-| Marker size | 2 px – 24 px (step 1 px) | 8 px |
+| Marker size | 2px – 24px (step 1px) | 8px |
 
 Settings are saved in the browser's local extension storage and persist across sessions.
 
