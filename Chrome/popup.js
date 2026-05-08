@@ -572,7 +572,9 @@ function normalizeSettings(input) {
     markerMode,
     color,
     opacity: clampNumber(input.opacity, 0.1, 1, defaults.opacity),
-    size: Math.round(clampNumber(resolveLegacySize(input), 2, 24, defaults.size)),
+    size: Math.round(
+      clampNumber(resolveLegacySize(input), 2, 24, defaults.size),
+    ),
   };
 }
 
@@ -597,4 +599,3 @@ function clampNumber(value, minimum, maximum, fallback) {
 
   return Math.min(maximum, Math.max(minimum, parsed));
 }
-

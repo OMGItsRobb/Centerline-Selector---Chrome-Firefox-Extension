@@ -682,7 +682,9 @@
       markerMode,
       color,
       opacity: clampNumber(input.opacity, 0.1, 1, defaults.opacity),
-      size: Math.round(clampNumber(resolveLegacySize(input), 2, 24, defaults.size)),
+      size: Math.round(
+        clampNumber(resolveLegacySize(input), 2, 24, defaults.size),
+      ),
     };
   }
 
@@ -711,5 +713,4 @@
   function clampToViewport(value, maximum) {
     return Math.min(maximum, Math.max(0, value));
   }
-
 })();
