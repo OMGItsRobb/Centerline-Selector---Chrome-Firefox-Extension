@@ -7,11 +7,12 @@ This repository contains two Manifest V3 variants of the extension:
 - `Chrome/`: Chrome-compatible package with a small API wrapper for promise-based extension calls.
 - `Firefox/`: Firefox WebExtension package with Gecko-specific manifest settings.
 
+
+<img width="2560" height="1390" alt="image" src="https://github.com/user-attachments/assets/2de07341-97e0-40f5-a459-00f4d7dfc1d4" />
+
 <img width="474" height="563" alt="image" src="https://github.com/user-attachments/assets/507ec87f-1d6e-4c04-92f6-4558db041b81" />
 
 <img width="2560" height="1397" alt="image" src="https://github.com/user-attachments/assets/bb2e070a-90dc-464a-8cb7-d37a6eed18b2" />
-
-<img width="2560" height="1390" alt="image" src="https://github.com/user-attachments/assets/2de07341-97e0-40f5-a459-00f4d7dfc1d4" />
 
 
 
