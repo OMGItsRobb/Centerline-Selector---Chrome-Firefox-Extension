@@ -1,13 +1,13 @@
 # CenterLine Selector
 
 Easily get the middle of a selected area. Used mostly for CAD programs that aren't smart enough to add one natively.
-CenterLine Selector is a Firefox WebExtension for marking the visual center of a selected on-screen area. Draw a box on the current page, confirm it, and the extension will place a center marker using a dot, crosshair, or both.
+CenterLine Selector is a Firefox WebExtension for marking the visual center of a selected on-screen area. Draw a box on the current page, confirm it, and the extension will place a center marker using either a dot or a crosshair.
 
 ## Features
 
 - Draw a selection box directly on the current page.
-- Mark the midpoint with a dot, crosshair, or a combined marker.
-- Adjust color, opacity, stroke width, and dot size from the popup UI.
+- Mark the midpoint with either a dot or crosshair.
+- Choose from preset colors and adjust opacity and marker size from the popup UI.
 - Update marker styling after a selection has already been created.
 - Save the most recent selection locally and restore it with one click.
 - Package the extension as an `.xpi` for Firefox distribution.

@@ -3,20 +3,27 @@ const defaults = { ...globalThis.CENTERLINE_DEFAULTS };
 const contentScriptFiles = ["defaults.js", "content-script.js"];
 const contentStyleFiles = ["content-script.css"];
 const selectionStorageKey = "savedSelection";
+const legacySettingKeys = ["strokeWidth", "dotSize"];
 const minSelectionSize = 8;
 const storageArea = browserApi.storage?.local;
+const allowedColors = new Set([
+  "#d62828",
+  "#f4c430",
+  "#2563eb",
+  "#2f9e44",
+  "#7c3aed",
+  "#111111",
+  "#ffffff",
+]);
 
 const settingsForm = document.querySelector("#settingsForm");
 const previewStage = document.querySelector("#previewStage");
 const markerModeInput = document.querySelector("#markerMode");
 const colorInput = document.querySelector("#color");
 const opacityInput = document.querySelector("#opacity");
-const strokeWidthInput = document.querySelector("#strokeWidth");
-const dotSizeInput = document.querySelector("#dotSize");
-const dotSizeField = document.querySelector("#dotSizeField");
+const sizeInput = document.querySelector("#size");
 const opacityValue = document.querySelector("#opacityValue");
-const strokeWidthValue = document.querySelector("#strokeWidthValue");
-const dotSizeValue = document.querySelector("#dotSizeValue");
+const sizeValue = document.querySelector("#sizeValue");
 const savedSelectionInfo = document.querySelector("#savedSelectionInfo");
 const statusNode = document.querySelector("#status");
 const startButton = document.querySelector("#startSelection");
@@ -196,8 +203,7 @@ function readSettingsFromForm() {
     markerMode: markerModeInput.value,
     color: colorInput.value,
     opacity: opacityInput.value,
-    strokeWidth: strokeWidthInput.value,
-    dotSize: dotSizeInput.value,
+    size: sizeInput.value,
   });
 }
 
@@ -205,27 +211,17 @@ function applySettingsToForm(settings) {
   markerModeInput.value = settings.markerMode;
   colorInput.value = settings.color;
   opacityInput.value = String(settings.opacity);
-  strokeWidthInput.value = String(settings.strokeWidth);
-  dotSizeInput.value = String(settings.dotSize);
+  sizeInput.value = String(settings.size);
   opacityValue.textContent = `${Math.round(settings.opacity * 100)}%`;
-  strokeWidthValue.textContent = `${settings.strokeWidth}px`;
-  dotSizeValue.textContent = `${settings.dotSize}px`;
-  dotSizeInput.disabled = settings.markerMode === "crosshair";
-  dotSizeField.classList.toggle(
-    "is-disabled",
-    settings.markerMode === "crosshair",
-  );
+  sizeValue.textContent = `${settings.size}px`;
 }
 
 function renderPreview(settings) {
   previewStage.dataset.mode = settings.markerMode;
   previewStage.style.setProperty("--preview-color", settings.color);
   previewStage.style.setProperty("--preview-opacity", String(settings.opacity));
-  previewStage.style.setProperty(
-    "--preview-stroke",
-    `${settings.strokeWidth}px`,
-  );
-  previewStage.style.setProperty("--preview-dot-size", `${settings.dotSize}px`);
+  previewStage.style.setProperty("--preview-stroke", `${settings.size}px`);
+  previewStage.style.setProperty("--preview-dot-size", `${settings.size}px`);
 }
 
 function updateSavedSelectionUI() {
@@ -252,7 +248,11 @@ async function loadPopupState() {
     throw new Error("missing-storage-api");
   }
 
-  return storageArea.get([...Object.keys(defaults), selectionStorageKey]);
+  return storageArea.get([
+    ...Object.keys(defaults),
+    ...legacySettingKeys,
+    selectionStorageKey,
+  ]);
 }
 
 async function saveSettings(settings) {
@@ -261,6 +261,10 @@ async function saveSettings(settings) {
   }
 
   await storageArea.set(settings);
+
+  if (typeof storageArea.remove === "function") {
+    await storageArea.remove(legacySettingKeys);
+  }
 }
 
 async function sendMessageToActiveTab(type, payload = {}, options = {}) {
@@ -553,21 +557,30 @@ function setStatus(message, isError = false) {
 }
 
 function normalizeSettings(input) {
-  const allowedModes = new Set(["dot", "crosshair", "both"]);
+  const allowedModes = new Set(["dot", "crosshair"]);
   const markerMode = allowedModes.has(input.markerMode)
     ? input.markerMode
     : defaults.markerMode;
-  const color = isHexColor(input.color) ? input.color : defaults.color;
+  const color = allowedColors.has(input.color) ? input.color : defaults.color;
 
   return {
     markerMode,
     color,
     opacity: clampNumber(input.opacity, 0.1, 1, defaults.opacity),
-    strokeWidth: Math.round(
-      clampNumber(input.strokeWidth, 1, 16, defaults.strokeWidth),
-    ),
-    dotSize: Math.round(clampNumber(input.dotSize, 4, 48, defaults.dotSize)),
+    size: Math.round(clampNumber(resolveLegacySize(input), 2, 24, defaults.size)),
   };
+}
+
+function resolveLegacySize(input) {
+  if (input.size !== undefined) {
+    return input.size;
+  }
+
+  if (input.markerMode === "crosshair") {
+    return input.strokeWidth ?? input.dotSize ?? defaults.size;
+  }
+
+  return input.dotSize ?? input.strokeWidth ?? defaults.size;
 }
 
 function clampNumber(value, minimum, maximum, fallback) {
@@ -580,6 +593,3 @@ function clampNumber(value, minimum, maximum, fallback) {
   return Math.min(maximum, Math.max(minimum, parsed));
 }
 
-function isHexColor(value) {
-  return typeof value === "string" && /^#[0-9a-f]{6}$/i.test(value);
-}

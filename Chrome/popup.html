@@ -9,11 +9,10 @@
   <body>
     <main class="panel">
       <header class="panel__header">
-        <p class="eyebrow">Firefox Extension</p>
+        <p class="eyebrow">Chrome Extension</p>
         <h1>CenterLine</h1>
         <p class="subtitle">
-          Draw a box, confirm it, and pin the midpoint with a dot, crosshair, or
-          both.
+          Draw a box, confirm it, and pin the midpoint with a dot or crosshair.
         </p>
       </header>
 
@@ -64,13 +63,20 @@
           <select id="markerMode" name="markerMode">
             <option value="dot">Dot only</option>
             <option value="crosshair">Crosshair only</option>
-            <option value="both">Dot + crosshair</option>
           </select>
         </label>
 
         <label class="field field--color">
           <span>Color</span>
-          <input id="color" name="color" type="color" />
+          <select id="color" name="color">
+            <option value="#d62828">Red</option>
+            <option value="#f4c430">Yellow</option>
+            <option value="#2563eb">Blue</option>
+            <option value="#2f9e44">Green</option>
+            <option value="#7c3aed">Purple</option>
+            <option value="#111111">Black</option>
+            <option value="#ffffff">White</option>
+          </select>
         </label>
 
         <label class="field">
@@ -89,32 +95,17 @@
         </label>
 
         <label class="field">
-          <span>Stroke width</span>
+          <span>Marker size</span>
           <div class="range-row">
             <input
-              id="strokeWidth"
-              name="strokeWidth"
+              id="size"
+              name="size"
               type="range"
-              min="1"
-              max="16"
+              min="2"
+              max="24"
               step="1"
             />
-            <output id="strokeWidthValue" for="strokeWidth"></output>
-          </div>
-        </label>
-
-        <label class="field" id="dotSizeField">
-          <span>Dot size</span>
-          <div class="range-row">
-            <input
-              id="dotSize"
-              name="dotSize"
-              type="range"
-              min="4"
-              max="48"
-              step="1"
-            />
-            <output id="dotSizeValue" for="dotSize"></output>
+            <output id="sizeValue" for="size"></output>
           </div>
         </label>
       </form>
@@ -124,12 +115,13 @@
       </button>
 
       <p class="note">
-        Firefox blocks extensions on some internal pages, including Add-ons
-        Manager tabs.
+        Chrome blocks extensions on internal pages, including chrome:// tabs
+        and the Chrome Web Store.
       </p>
       <p id="status" class="status" aria-live="polite"></p>
     </main>
 
+    <script src="extension-api.js"></script>
     <script src="defaults.js"></script>
     <script src="popup.js"></script>
   </body>

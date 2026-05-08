@@ -5,12 +5,22 @@
 
   globalThis.__centerLineSelectorLoaded = true;
 
-  const browserApi = globalThis.browser;
+  const browserApi = globalThis.CENTERLINE_EXTENSION_API;
+  const addMessageListener = globalThis.CENTERLINE_ADD_MESSAGE_LISTENER;
   const defaults = { ...globalThis.CENTERLINE_DEFAULTS };
   const selectionStorageKey = "savedSelection";
   const minSelectionSize = 8;
   const overlayZIndex = 2147483646;
   const markerZIndex = 2147483647;
+  const allowedColors = new Set([
+    "#d62828",
+    "#f4c430",
+    "#2563eb",
+    "#2f9e44",
+    "#7c3aed",
+    "#111111",
+    "#ffffff",
+  ]);
 
   const state = {
     settings: { ...defaults },
@@ -27,7 +37,7 @@
     activeSelection: null,
   };
 
-  browserApi.runtime.onMessage.addListener((message) => {
+  addMessageListener((message) => {
     if (!message || typeof message !== "object") {
       return undefined;
     }
@@ -396,10 +406,10 @@
     marker.style.height = `${viewportRect.height}px`;
     marker.style.setProperty("--clff-color", settings.color);
     marker.style.setProperty("--clff-opacity", String(settings.opacity));
-    marker.style.setProperty("--clff-stroke", `${settings.strokeWidth}px`);
-    marker.style.setProperty("--clff-dot-size", `${settings.dotSize}px`);
+    marker.style.setProperty("--clff-stroke", `${settings.size}px`);
+    marker.style.setProperty("--clff-dot-size", `${settings.size}px`);
 
-    if (settings.markerMode === "crosshair" || settings.markerMode === "both") {
+    if (settings.markerMode === "crosshair") {
       marker.appendChild(
         createMarkerPart("clff-marker-line clff-marker-line--horizontal"),
       );
@@ -408,7 +418,7 @@
       );
     }
 
-    if (settings.markerMode === "dot" || settings.markerMode === "both") {
+    if (settings.markerMode === "dot") {
       marker.appendChild(createMarkerPart("clff-marker-dot"));
     }
 
@@ -662,21 +672,30 @@
   }
 
   function normalizeSettings(input) {
-    const allowedModes = new Set(["dot", "crosshair", "both"]);
+    const allowedModes = new Set(["dot", "crosshair"]);
     const markerMode = allowedModes.has(input.markerMode)
       ? input.markerMode
       : defaults.markerMode;
-    const color = isHexColor(input.color) ? input.color : defaults.color;
+    const color = allowedColors.has(input.color) ? input.color : defaults.color;
 
     return {
       markerMode,
       color,
       opacity: clampNumber(input.opacity, 0.1, 1, defaults.opacity),
-      strokeWidth: Math.round(
-        clampNumber(input.strokeWidth, 1, 16, defaults.strokeWidth),
-      ),
-      dotSize: Math.round(clampNumber(input.dotSize, 4, 48, defaults.dotSize)),
+      size: Math.round(clampNumber(resolveLegacySize(input), 2, 24, defaults.size)),
     };
+  }
+
+  function resolveLegacySize(input) {
+    if (input.size !== undefined) {
+      return input.size;
+    }
+
+    if (input.markerMode === "crosshair") {
+      return input.strokeWidth ?? input.dotSize ?? defaults.size;
+    }
+
+    return input.dotSize ?? input.strokeWidth ?? defaults.size;
   }
 
   function clampNumber(value, minimum, maximum, fallback) {
@@ -693,7 +712,4 @@
     return Math.min(maximum, Math.max(0, value));
   }
 
-  function isHexColor(value) {
-    return typeof value === "string" && /^#[0-9a-f]{6}$/i.test(value);
-  }
 })();
