@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>CenterLine Selector</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <main class="panel">
+      <header class="panel__header">
+        <p class="eyebrow">Firefox Extension</p>
+        <h1>CenterLine</h1>
+        <p class="subtitle">
+          Draw a box, confirm it, and pin the midpoint with a dot, crosshair, or
+          both.
+        </p>
+      </header>
+
+      <section class="selection-card" aria-label="Area selector controls">
+        <div class="selection-actions">
+          <button
+            id="startSelection"
+            class="button button--primary"
+            type="button"
+          >
+            Start Selection
+          </button>
+          <button
+            id="useSavedSelection"
+            class="button button--secondary"
+            type="button"
+          >
+            Use Saved Selection
+          </button>
+        </div>
+
+        <button
+          id="clearMarker"
+          class="button button--secondary button--full"
+          type="button"
+        >
+          Clear Marker
+        </button>
+
+        <p id="savedSelectionInfo" class="selection-note" data-empty="true">
+          No saved selection yet. Confirm a selection once and reuse it later.
+        </p>
+      </section>
+
+      <section class="preview-card" aria-label="Marker preview">
+        <div class="preview-stage" id="previewStage" data-mode="dot">
+          <div class="preview-selection">
+            <div class="preview-line preview-line--horizontal"></div>
+            <div class="preview-line preview-line--vertical"></div>
+            <div class="preview-dot"></div>
+          </div>
+        </div>
+      </section>
+
+      <form id="settingsForm" class="settings-form">
+        <label class="field">
+          <span>Marker style</span>
+          <select id="markerMode" name="markerMode">
+            <option value="dot">Dot only</option>
+            <option value="crosshair">Crosshair only</option>
+            <option value="both">Dot + crosshair</option>
+          </select>
+        </label>
+
+        <label class="field field--color">
+          <span>Color</span>
+          <input id="color" name="color" type="color" />
+        </label>
+
+        <label class="field">
+          <span>Opacity</span>
+          <div class="range-row">
+            <input
+              id="opacity"
+              name="opacity"
+              type="range"
+              min="0.1"
+              max="1"
+              step="0.05"
+            />
+            <output id="opacityValue" for="opacity"></output>
+          </div>
+        </label>
+
+        <label class="field">
+          <span>Stroke width</span>
+          <div class="range-row">
+            <input
+              id="strokeWidth"
+              name="strokeWidth"
+              type="range"
+              min="1"
+              max="16"
+              step="1"
+            />
+            <output id="strokeWidthValue" for="strokeWidth"></output>
+          </div>
+        </label>
+
+        <label class="field" id="dotSizeField">
+          <span>Dot size</span>
+          <div class="range-row">
+            <input
+              id="dotSize"
+              name="dotSize"
+              type="range"
+              min="4"
+              max="48"
+              step="1"
+            />
+            <output id="dotSizeValue" for="dotSize"></output>
+          </div>
+        </label>
+      </form>
+
+      <button id="resetDefaults" class="button-link" type="button">
+        Reset defaults
+      </button>
+
+      <p class="note">
+        Firefox blocks extensions on some internal pages, including Add-ons
+        Manager tabs.
+      </p>
+      <p id="status" class="status" aria-live="polite"></p>
+    </main>
+
+    <script src="defaults.js"></script>
+    <script src="popup.js"></script>
+  </body>
+</html>

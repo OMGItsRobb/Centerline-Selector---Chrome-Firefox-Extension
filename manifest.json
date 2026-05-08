@@ -1,0 +1,35 @@
+{
+  "manifest_version": 3,
+  "name": "CenterLine Selector",
+  "version": "1.0.0",
+  "description": "Select an area on the page and mark its center with a dot or crosshair.",
+  "permissions": ["storage", "tabs", "scripting"],
+  "host_permissions": ["<all_urls>"],
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "centerline-selector@centerlineffextension.local",
+      "data_collection_permissions": {
+        "required": ["none"]
+      }
+    }
+  },
+  "icons": {
+    "48": "icons/centerline-icon.svg",
+    "96": "icons/centerline-icon.svg"
+  },
+  "action": {
+    "default_title": "CenterLine Selector",
+    "default_popup": "popup.html",
+    "default_icon": {
+      "48": "icons/centerline-icon.svg"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["defaults.js", "content-script.js"],
+      "css": ["content-script.css"],
+      "run_at": "document_idle"
+    }
+  ]
+}
